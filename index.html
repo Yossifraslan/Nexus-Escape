@@ -1,11 +1,360 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>NEXUS-09 // NEON ESCAPE</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- background layers: grid, scanlines, canvas particles -->
+    <div class="bg-grid"></div>
+    <div class="bg-scanlines"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="vignette"></div>
+
+    <!-- screen-shake wrapper so every screen can be jolted without fighting fixed backgrounds -->
+    <div id="shake-wrapper">
+      <!-- ===================== BOOT SCREEN ===================== -->
+      <section id="screen-boot" class="screen active">
+        <div class="boot-log" id="boot-log" aria-hidden="true"></div>
+      </section>
+
+      <!-- ===================== START SCREEN ===================== -->
+      <section id="screen-start" class="screen">
+        <div class="start-inner">
+          <div class="eyebrow-line">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="sys-tag">REMOTE SESSION // UNAUTHORIZED</span>
+          </div>
+
+          <h1 class="logo-title" data-text="NEXUS-09">NEXUS-09</h1>
+
+          <div class="status-row">
+            <span class="status-label">SYSTEM STATUS:</span>
+            <span class="status-value glitch-text" data-text="CRITICAL"
+              >CRITICAL</span
+            >
+          </div>
+
+          <p class="start-copy">
+            You are inside an unstable machine intelligence. Containment is
+            failing. Recover four access fragments before NEXUS-09 seals the
+            partition.
+          </p>
+
+          <p class="start-timer">
+            YOU HAVE <span class="hl">05:00</span> MINUTES.
+          </p>
+
+          <button id="btn-init" class="btn-primary">
+            <span class="btn-text">[ INITIALIZE ESCAPE ]</span>
+          </button>
+
+          <div class="start-footer">
+            <span id="high-score-line">BEST RUN: NONE RECORDED</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== GLITCH TRANSITION OVERLAY ===================== -->
+      <div id="glitch-overlay" aria-hidden="true">
+        <div class="glitch-slice"></div>
+        <div class="glitch-slice"></div>
+        <div class="glitch-slice"></div>
+        <div class="glitch-slice"></div>
+        <div class="glitch-slice"></div>
+      </div>
+
+      <!-- ===================== MAIN GAME SCREEN ===================== -->
+      <section id="screen-game" class="screen">
+        <!-- top status bar -->
+        <header class="hud">
+          <div class="hud-left">
+            <span class="hud-title">NEXUS-09</span>
+            <span class="hud-sub"
+              >SYSTEM: <em id="system-state">UNSTABLE</em></span
+            >
+          </div>
+
+          <div class="hud-center">
+            <div class="timer-box" id="timer-box">
+              <span class="timer-label">TIME REMAINING</span>
+              <span class="timer-value" id="timer-value">10:00</span>
+            </div>
+          </div>
+
+          <div class="hud-right">
+            <span class="hud-title">PROGRESS</span>
+            <span class="hud-sub"
+              ><span id="fragment-count">0</span> / 4 FRAGMENTS</span
+            >
+            <div class="fragment-pips">
+              <span class="pip" data-frag="terminal"></span>
+              <span class="pip" data-frag="signal"></span>
+              <span class="pip" data-frag="memory"></span>
+              <span class="pip" data-frag="core"></span>
+            </div>
+          </div>
+        </header>
+
+        <!-- secondary telemetry strip -->
+        <div class="telemetry">
+          <div class="telemetry-item">
+            <span class="t-label">CPU</span>
+            <div class="t-bar"><div class="t-fill" id="cpu-fill"></div></div>
+          </div>
+          <div class="telemetry-item">
+            <span class="t-label">SECURITY</span>
+            <div class="t-bar">
+              <div class="t-fill t-fill--alt" id="sec-fill"></div>
+            </div>
+          </div>
+          <div class="telemetry-item telemetry-clock">
+            <span class="t-label">SYS.CLOCK</span>
+            <span id="digital-clock">00:00:00</span>
+          </div>
+          <div class="telemetry-item telemetry-hex" id="hex-strip">0x0000</div>
+        </div>
+
+        <!-- nav -->
+        <nav class="main-nav" id="main-nav">
+          <button class="nav-btn" data-view="core">
+            <span class="nav-icon">◆</span> CORE
+          </button>
+          <button class="nav-btn" data-view="terminal">
+            <span class="nav-icon">▣</span> TERMINAL
+          </button>
+          <button class="nav-btn" data-view="signal">
+            <span class="nav-icon">▲</span> SIGNAL
+          </button>
+          <button class="nav-btn" data-view="memory">
+            <span class="nav-icon">◈</span> MEMORY
+          </button>
+        </nav>
+
+        <!-- views -->
+        <main class="view-port">
+          <!-- CORE VIEW -->
+          <div class="view" id="view-core" data-view="core">
+            <div class="panel core-panel">
+              <h2 class="panel-title">REACTOR CORE</h2>
+              <p class="panel-hint">
+                Rotate the rings so every conduit points toward the center.
+                Locked panels unlock once fragments 01–03 are secured.
+              </p>
+
+              <div class="core-stage" id="core-stage">
+                <div class="core-glow"></div>
+                <svg id="core-svg" viewBox="0 0 400 400" class="core-svg"></svg>
+                <div class="core-center">
+                  <span id="core-center-icon">⬢</span>
+                </div>
+              </div>
+
+              <div class="core-controls" id="core-controls"></div>
+
+              <div class="lock-banner" id="core-lock-banner">
+                CORE LOCKED — RECOVER 3 OTHER FRAGMENTS FIRST
+              </div>
+            </div>
+          </div>
+
+          <!-- TERMINAL VIEW -->
+          <div class="view" id="view-terminal" data-view="terminal">
+            <div class="panel terminal-panel">
+              <h2 class="panel-title">SECURITY TERMINAL</h2>
+
+              <div class="terminal-window">
+                <div class="terminal-titlebar">
+                  <span>NEXUS TERMINAL v4.7</span>
+                  <span class="term-status">PROTOCOL ACTIVE</span>
+                </div>
+                <div class="terminal-body" id="terminal-log"></div>
+
+                <div class="terminal-input-row">
+                  <span class="prompt-glyph">&gt;</span>
+                  <input
+                    type="text"
+                    id="terminal-input"
+                    maxlength="4"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="ENTER 4-DIGIT CODE"
+                    aria-label="Authorization code"
+                  />
+                  <button id="terminal-submit" class="btn-mini">SUBMIT</button>
+                </div>
+              </div>
+
+              <div class="clue-grid" id="clue-grid"></div>
+            </div>
+          </div>
+
+          <!-- SIGNAL VIEW -->
+          <div class="view" id="view-signal" data-view="signal">
+            <div class="panel signal-panel">
+              <h2 class="panel-title">SIGNAL DECODER</h2>
+              <p class="panel-hint">
+                Repeat the transmitted sequence.
+                <span id="signal-mistakes-hint">3 mistakes allowed.</span>
+              </p>
+
+              <canvas id="signal-canvas" class="signal-canvas"></canvas>
+
+              <div class="signal-sequence" id="signal-sequence-display"></div>
+
+              <div class="signal-controls" id="signal-controls"></div>
+
+              <div class="signal-status" id="signal-status">
+                STANDBY — PRESS START
+              </div>
+              <button id="signal-start-btn" class="btn-mini">
+                ▶ START TRANSMISSION
+              </button>
+            </div>
+          </div>
+
+          <!-- MEMORY VIEW -->
+          <div class="view" id="view-memory" data-view="memory">
+            <div class="panel memory-panel">
+              <h2 class="panel-title">MEMORY LATTICE</h2>
+              <div class="memory-meta">
+                <span>MISTAKES: <em id="memory-mistakes">0</em></span>
+                <span>TIME: <em id="memory-timer">00:00</em></span>
+                <span>PAIRS: <em id="memory-pairs">0</em> / 8</span>
+              </div>
+              <div class="memory-grid" id="memory-grid"></div>
+            </div>
+          </div>
+        </main>
+
+        <!-- fragment toast -->
+        <div
+          id="fragment-toast"
+          class="fragment-toast"
+          aria-live="polite"
+        ></div>
+
+        <!-- floating system log -->
+        <div class="system-log" id="system-log" aria-hidden="true"></div>
+      </section>
+
+      <!-- ===================== FINAL ACCESS SCREEN ===================== -->
+      <section id="screen-final-ready" class="screen">
+        <div class="start-inner">
+          <h1 class="logo-title" data-text="NEXUS-09">NEXUS-09</h1>
+          <p
+            class="status-value glitch-text"
+            data-text="ALL FRAGMENTS COLLECTED"
+            style="font-size: clamp(1.1rem, 3vw, 1.8rem)"
+          >
+            ALL FRAGMENTS COLLECTED
+          </p>
+          <p class="start-copy">
+            Final access is available. Initiate the escape sequence before
+            containment reasserts control.
+          </p>
+          <p class="start-copy hl" style="letter-spacing: 0.08em">
+            FINAL ACCESS AVAILABLE
+          </p>
+          <button id="btn-escape" class="btn-primary">
+            <span class="btn-text">[ ESCAPE NEXUS ]</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ===================== ESCAPE SEQUENCE SCREEN ===================== -->
+      <section id="screen-escape-sequence" class="screen">
+        <div class="start-inner">
+          <h1 class="logo-title small" data-text="NEXUS-09">NEXUS-09</h1>
+          <p
+            class="status-value glitch-text"
+            data-text="ESCAPE PROTOCOL INITIATED"
+          >
+            ESCAPE PROTOCOL INITIATED
+          </p>
+
+          <div class="shutdown-block">
+            <p id="shutdown-label">SYSTEM SHUTDOWN...</p>
+            <div class="shutdown-bar-track">
+              <div class="shutdown-bar-fill" id="shutdown-fill"></div>
+            </div>
+            <p class="shutdown-pct" id="shutdown-pct">0%</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== WIN SCREEN ===================== -->
+      <section id="screen-win" class="screen">
+        <div class="start-inner">
+          <p
+            class="status-value glitch-text"
+            data-text="ACCESS GRANTED"
+            style="color: var(--good)"
+          >
+            ACCESS GRANTED
+          </p>
+          <h1 class="logo-title" data-text="YOU ESCAPED">YOU ESCAPED.</h1>
+
+          <div class="rank-badge" id="rank-badge">
+            <span class="rank-letter" id="rank-letter">S</span>
+            <span class="rank-name" id="rank-name">SYSTEM BREAKER</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-label">TIME REMAINING</span>
+              <span class="stat-value" id="stat-time">00:00</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">PUZZLES COMPLETED</span>
+              <span class="stat-value" id="stat-puzzles">0 / 4</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">MISTAKES</span>
+              <span class="stat-value" id="stat-mistakes">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">FINAL SCORE</span>
+              <span class="stat-value" id="stat-score">0</span>
+            </div>
+          </div>
+
+          <p class="start-copy" id="high-score-note"></p>
+
+          <button id="btn-play-again" class="btn-primary">
+            <span class="btn-text">[ PLAY AGAIN ]</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ===================== GAME OVER SCREEN ===================== -->
+      <section id="screen-lose" class="screen">
+        <div class="start-inner">
+          <p
+            class="status-value glitch-text"
+            data-text="CONNECTION TERMINATED"
+            style="color: var(--bad)"
+          >
+            CONNECTION TERMINATED
+          </p>
+          <h1 class="logo-title" data-text="LOCKED OUT">LOCKED OUT</h1>
+          <p class="start-copy">NEXUS-09 HAS LOCKED YOU OUT.</p>
+          <p class="start-timer">FINAL SCORE: <span class="hl">0</span></p>
+          <button id="btn-retry" class="btn-primary">
+            <span class="btn-text">[ RETRY ]</span>
+          </button>
+        </div>
+      </section>
+    </div>
+    <!-- /shake-wrapper -->
+
+    <script src="script.js"></script>
+  </body>
 </html>
