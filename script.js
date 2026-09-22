@@ -832,7 +832,7 @@ class Game {
     const best = localStorage.getItem(HIGH_SCORE_KEY);
     $("high-score-line").textContent = best
       ? `BEST RUN: ${best} PTS`
-      : "BEST RUN: NONE RECORDED";
+      : "NO BEST RUN YET - MAKE THIS ONE COUNT";
   }
 
   startGame() {
@@ -955,7 +955,7 @@ class Game {
       this.fragments.memory
     ) {
       $("core-lock-banner").textContent =
-        "CORE UNLOCKED — SYNCHRONIZE THE RINGS";
+        "The core is awake. Bring the rings into alignment.";
       $("system-state").textContent = "DESTABILIZING";
     }
 
@@ -967,13 +967,13 @@ class Game {
 
   showFragmentToast(key, count) {
     const labels = {
-      terminal: "FRAGMENT 01 ACQUIRED",
-      signal: "FRAGMENT 02 ACQUIRED",
-      memory: "FRAGMENT 03 ACQUIRED",
-      core: "FRAGMENT 04 ACQUIRED",
+      terminal: "YOU FOUND THE FIRST PIECE",
+      signal: "YOU CAUGHT THE SIGNAL",
+      memory: "A MEMORY CAME BACK",
+      core: "THE CORE IS YOURS",
     };
     const toast = $("fragment-toast");
-    toast.innerHTML = `<div class="toast-title">${labels[key]}</div><div class="toast-sub">${count} / 4 FRAGMENTS SECURED</div>`;
+    toast.innerHTML = `<div class="toast-title">${labels[key]}</div><div class="toast-sub">${count} of 4 pieces found</div>`;
     toast.classList.add("visible");
     setTimeout(() => toast.classList.remove("visible"), 2200);
   }

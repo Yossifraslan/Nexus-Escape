@@ -30,7 +30,7 @@
             <span class="dot dot-red"></span>
             <span class="dot dot-yellow"></span>
             <span class="dot dot-green"></span>
-            <span class="sys-tag">REMOTE SESSION // UNAUTHORIZED</span>
+            <span class="sys-tag">A QUIET PLACE TO BEGIN</span>
           </div>
 
           <h1 class="logo-title" data-text="NEXUS-09">NEXUS-09</h1>
@@ -43,13 +43,13 @@
           </div>
 
           <p class="start-copy">
-            You are inside an unstable machine intelligence. Containment is
-            failing. Recover four access fragments before NEXUS-09 seals the
-            partition.
+            Something in NEXUS-09 woke up, and it is trying to close the door.
+            Find the four access fragments, keep your head, and make it out
+            before the system forgets you were here.
           </p>
 
           <p class="start-timer">
-            YOU HAVE <span class="hl">05:00</span> MINUTES.
+            You have <span class="hl">05:00</span>. Take a breath. Then run.
           </p>
 
           <button id="btn-init" class="btn-primary">
@@ -57,7 +57,7 @@
           </button>
 
           <div class="start-footer">
-            <span id="high-score-line">BEST RUN: NONE RECORDED</span>
+            <span id="high-score-line">NO BEST RUN YET - MAKE THIS ONE COUNT</span>
           </div>
         </div>
       </section>
@@ -145,8 +145,8 @@
             <div class="panel core-panel">
               <h2 class="panel-title">REACTOR CORE</h2>
               <p class="panel-hint">
-                Rotate the rings so every conduit points toward the center.
-                Locked panels unlock once fragments 01–03 are secured.
+                Turn the rings until every conduit faces the center. There is
+                no rush inside this room, so trust your eyes.
               </p>
 
               <div class="core-stage" id="core-stage">
@@ -160,7 +160,7 @@
               <div class="core-controls" id="core-controls"></div>
 
               <div class="lock-banner" id="core-lock-banner">
-                CORE LOCKED — RECOVER 3 OTHER FRAGMENTS FIRST
+                The core is still asleep. Find the other three fragments first.
               </div>
             </div>
           </div>
@@ -201,8 +201,8 @@
             <div class="panel signal-panel">
               <h2 class="panel-title">SIGNAL DECODER</h2>
               <p class="panel-hint">
-                Repeat the transmitted sequence.
-                <span id="signal-mistakes-hint">3 mistakes allowed.</span>
+                Listen closely, then repeat what you hear.
+                <span id="signal-mistakes-hint">You get 3 chances.</span>
               </p>
 
               <canvas id="signal-canvas" class="signal-canvas"></canvas>
@@ -257,14 +257,14 @@
             ALL FRAGMENTS COLLECTED
           </p>
           <p class="start-copy">
-            Final access is available. Initiate the escape sequence before
-            containment reasserts control.
+            You found every piece. One last step: open the door before the
+            system changes its mind.
           </p>
           <p class="start-copy hl" style="letter-spacing: 0.08em">
-            FINAL ACCESS AVAILABLE
+            YOU MADE IT THIS FAR
           </p>
           <button id="btn-escape" class="btn-primary">
-            <span class="btn-text">[ ESCAPE NEXUS ]</span>
+            <span class="btn-text">[ OPEN THE DOOR ]</span>
           </button>
         </div>
       </section>
@@ -295,12 +295,12 @@
         <div class="start-inner">
           <p
             class="status-value glitch-text"
-            data-text="ACCESS GRANTED"
+            data-text="YOU ARE THROUGH"
             style="color: var(--good)"
           >
             ACCESS GRANTED
           </p>
-          <h1 class="logo-title" data-text="YOU ESCAPED">YOU ESCAPED.</h1>
+            <h1 class="logo-title" data-text="YOU MADE IT">YOU MADE IT.</h1>
 
           <div class="rank-badge" id="rank-badge">
             <span class="rank-letter" id="rank-letter">S</span>
@@ -345,7 +345,7 @@
             CONNECTION TERMINATED
           </p>
           <h1 class="logo-title" data-text="LOCKED OUT">LOCKED OUT</h1>
-          <p class="start-copy">NEXUS-09 HAS LOCKED YOU OUT.</p>
+            <p class="start-copy">The door closed before you could reach it.</p>
           <p class="start-timer">FINAL SCORE: <span class="hl">0</span></p>
           <button id="btn-retry" class="btn-primary">
             <span class="btn-text">[ RETRY ]</span>
