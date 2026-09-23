@@ -826,6 +826,29 @@ class Game {
     document.querySelectorAll(".nav-btn").forEach((btn) => {
       btn.addEventListener("click", () => this.switchView(btn.dataset.view));
     });
+
+    const notesDrawer = $("notes-drawer");
+    const notesInput = $("notes-input");
+    $("notes-toggle").addEventListener("click", () => {
+      const isOpen = notesDrawer.classList.toggle("open");
+      notesDrawer.setAttribute("aria-hidden", String(!isOpen));
+      $("notes-toggle").classList.toggle("active", isOpen);
+      if (isOpen) notesInput.focus();
+    });
+    notesInput.value = localStorage.getItem("nexus09-field-notes") || "";
+    notesInput.addEventListener("input", () => {
+      localStorage.setItem("nexus09-field-notes", notesInput.value);
+    });
+
+    $("quiet-toggle").addEventListener("click", () => {
+      const quiet = document.body.classList.toggle("quiet-mode");
+      $("quiet-toggle").classList.toggle("active", quiet);
+      localStorage.setItem("nexus09-quiet-mode", String(quiet));
+    });
+    if (localStorage.getItem("nexus09-quiet-mode") === "true") {
+      document.body.classList.add("quiet-mode");
+      $("quiet-toggle").classList.add("active");
+    }
   }
 
   renderHighScore() {

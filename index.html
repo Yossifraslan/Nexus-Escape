@@ -100,8 +100,17 @@
               <span class="pip" data-frag="memory"></span>
               <span class="pip" data-frag="core"></span>
             </div>
+            <div class="hud-actions">
+              <button id="notes-toggle" class="utility-btn" type="button">FIELD NOTES</button>
+              <button id="quiet-toggle" class="utility-btn" type="button">QUIET MODE</button>
+            </div>
           </div>
         </header>
+
+        <aside class="notes-drawer" id="notes-drawer" aria-hidden="true">
+          <label class="notes-label" for="notes-input">FIELD NOTES / PRIVATE</label>
+          <textarea id="notes-input" maxlength="500" placeholder="Write down a clue, a hunch, or a code..."></textarea>
+        </aside>
 
         <!-- secondary telemetry strip -->
         <div class="telemetry">
