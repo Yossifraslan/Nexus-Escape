@@ -27,6 +27,7 @@ function $(id) {
 class AudioEngine {
   constructor() {
     this.ctx = null;
+    this.muted = false;
   }
 
   ensureContext() {
@@ -43,6 +44,7 @@ class AudioEngine {
     duration,
     { type = "sine", gain = 0.15, sweepTo = null, delay = 0 } = {},
   ) {
+    if (this.muted) return;
     try {
       const ctx = this.ensureContext();
       const osc = ctx.createOscillator();
@@ -366,7 +368,7 @@ class SignalPuzzle {
   constructor(game) {
     this.game = game;
     this.solved = false;
-    this.symbols = ["▲", "●", "■", "▼"];
+    this.symbols = ["+", "-", "*", "/"];
     this.length = rand(6, 8);
     this.sequence = Array.from({ length: this.length }, () =>
       pick(this.symbols),
@@ -843,11 +845,13 @@ class Game {
     $("quiet-toggle").addEventListener("click", () => {
       const quiet = document.body.classList.toggle("quiet-mode");
       $("quiet-toggle").classList.toggle("active", quiet);
+      this.audio.muted = quiet;
       localStorage.setItem("nexus09-quiet-mode", String(quiet));
     });
     if (localStorage.getItem("nexus09-quiet-mode") === "true") {
       document.body.classList.add("quiet-mode");
       $("quiet-toggle").classList.add("active");
+      this.audio.muted = true;
     }
   }
 
